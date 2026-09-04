@@ -235,34 +235,44 @@ select option{background:#10164f;color:#fff}
 }
 .seat-zoom-controls{
   display:flex;
-  justify-content:center;
   align-items:center;
-  gap:12px;
-  margin:8px 0 12px;
+  justify-content:center;
+  gap:10px;
+  margin:10px 0 14px;
+  position:relative;
+  z-index:20;
 }
 
 .seat-zoom-controls button{
-  width:36px;
-  height:36px;
-  border:none;
+  width:38px;
+  height:38px;
+  border:0;
   border-radius:10px;
-  background:linear-gradient(135deg,#ff69d8,#7748ff);
+  background:linear-gradient(135deg,#ff6bd8,#7748ff);
   color:white;
-  font-size:22px;
-  font-weight:800;
+  font-size:24px;
+  font-weight:900;
   cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:.15s;
 }
 
 .seat-zoom-controls button:hover{
   transform:scale(1.08);
 }
 
+.seat-zoom-controls button:active{
+  transform:scale(.95);
+}
+
 #seatZoomLabel{
   min-width:55px;
   text-align:center;
-  font-size:.75rem;
+  color:#fff;
+  font-size:.8rem;
   font-weight:800;
-  color:#dbe3ff;
 }
 
 #seat-layout-wrapper{
@@ -270,12 +280,13 @@ select option{background:#10164f;color:#fff}
   overflow:auto;
   display:flex;
   justify-content:center;
-  padding:8px 4px;
+  padding:10px 5px 15px;
 }
 
 #bus-layout-container{
   transform-origin:top center;
   transition:transform .2s ease;
+  flex-shrink:0;
 }
   
 </style>
@@ -339,14 +350,13 @@ select option{background:#10164f;color:#fff}
         <div class="steering-wheel"></div>
         <span class="bus-front-label" style="opacity:.5">Sopir</span>
       </div>
-      <div class="seat-zoom-controls">
-  <button onclick="changeSeatZoom(-0.1)">−</button>
+<div class="seat-zoom-controls">
+  <button type="button" onclick="changeSeatZoom(-0.1)">−</button>
   <span id="seatZoomLabel">100%</span>
-  <button onclick="changeSeatZoom(0.1)">+</button>
+  <button type="button" onclick="changeSeatZoom(0.1)">+</button>
 </div>
 <div id="seat-layout-wrapper">
-  <div id="bus-layout-container">
-    </div>
+  <div id="bus-layout-container"></div>
 </div>
       <div class="seat-legend">
         <div class="legend-item"><div class="legend-dot l-avail"></div>Tersedia</div>
@@ -513,6 +523,26 @@ function makeSeat(num) {
   }
 
   return el;
+} 
+var seatZoom = 1;
+
+function changeSeatZoom(amount) {
+  seatZoom += amount;
+
+  // batas zoom 70% - 150%
+  if (seatZoom < 0.7) seatZoom = 0.7;
+  if (seatZoom > 1.5) seatZoom = 1.5;
+
+  var layout = document.getElementById('bus-layout-container');
+  var label = document.getElementById('seatZoomLabel');
+
+  if (layout) {
+    layout.style.transform = 'scale(' + seatZoom + ')';
+  }
+
+  if (label) {
+    label.textContent = Math.round(seatZoom * 100) + '%';
+  }
 }
   function renderLayout() {
     var container = document.getElementById('bus-layout-container');
