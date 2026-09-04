@@ -406,24 +406,28 @@ var takenSeats = {};
   }
 ];
   // Firebase realtime listener - update semua device otomatis
-  seatsRef.on('value', function(snapshot) {
-    var data = snapshot.val() || {};
-    takenSeats = {};
-    Object.values(data).forEach(function(d) {
-      var num = parseInt(d.kursi);
-      if (!isNaN(num)) takenSeats[num] = d.nama || '?';
-    });
-    renderLayout();
+seatsRef.on('value', function(snapshot) {
+  takenSeats = {};
+
+  snapshot.forEach(function(childSnapshot) {
+    var data = childSnapshot.val();
+
+    if (data && data.kursi) {
+      takenSeats[Number(data.kursi)] = data.nama || 'Terisi';
+    }
+  });
+
+  renderLayout();
+});
   }, function(error) {
     console.error('Firebase read error:', error);
-    // Jangan menghilangkan layout kursi jika Firebase tidak bisa dibaca.
     renderLayout();
   });
 
 function makeSeat(num) {
   var isSteril = STERIL_SEATS.indexOf(num) !== -1;
-  var isTaken  = takenSeats[num] !== undefined;
-  var isSel    = selectedSeat === num;
+  var isTaken = takenSeats[num] !== undefined;
+  var isSel = selectedSeat === num;
 
   var el = document.createElement('div');
   el.className = 'seat';
@@ -436,21 +440,19 @@ function makeSeat(num) {
     el.classList.add('selected');
   }
 
-  // Nomor kursi
   var numEl = document.createElement('div');
   numEl.className = 'seat-num';
   numEl.textContent = num;
   el.appendChild(numEl);
 
-  // Nama hanya muncul kalau kursi sudah benar-benar diambil
+  // TAMPILKAN NAMA PESERTA
   if (isTaken) {
     var nameEl = document.createElement('div');
     nameEl.className = 'seat-name';
-    nameEl.textContent = takenSeats[num].split(' ')[0];
+    nameEl.textContent = takenSeats[num];
     el.appendChild(nameEl);
   }
 
-  // Kursi yang tersedia / belum diambil bisa diklik
   if (!isSteril && !isTaken) {
     el.addEventListener('click', function() {
       selectedSeat = num;
@@ -460,7 +462,6 @@ function makeSeat(num) {
 
   return el;
 }
-
   function renderLayout() {
     var container = document.getElementById('bus-layout-container');
     if (!container) return;
