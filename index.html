@@ -420,39 +420,46 @@ var takenSeats = {};
     renderLayout();
   });
 
-  function makeSeat(num) {
-    var isSteril = STERIL_SEATS.indexOf(num) !== -1;
-    var isTaken  = takenSeats[num] !== undefined;
-    var isSel    = selectedSeat === num;
-    var el = document.createElement('div');
-    el.className = 'seat';
-    if (isSteril) el.classList.add('steril');
-    else if (isTaken) el.classList.add('taken');
-    else if (isSel) el.classList.add('selected');
-    var numEl = document.createElement('div');
-    numEl.className = 'seat-num';
-    numEl.textContent = num;
-    el.appendChild(numEl);
-    var label = REFERENCE_SEAT_LABELS[num] || '';
-    if (isTaken) {
-      var nameEl = document.createElement('div');
-      nameEl.className = 'seat-name';
-      nameEl.textContent = takenSeats[num].split(' ')[0];
-      el.appendChild(nameEl);
-    } else if (label) {
-      var labelEl = document.createElement('div');
-      labelEl.className = 'seat-name';
-      labelEl.textContent = label;
-      el.appendChild(labelEl);
-    }
-    if (!isSteril && !isTaken) {
-      el.addEventListener('click', function() {
-        selectedSeat = num;
-        renderLayout();
-      });
-    }
-    return el;
+function makeSeat(num) {
+  var isSteril = STERIL_SEATS.indexOf(num) !== -1;
+  var isTaken  = takenSeats[num] !== undefined;
+  var isSel    = selectedSeat === num;
+
+  var el = document.createElement('div');
+  el.className = 'seat';
+
+  if (isSteril) {
+    el.classList.add('steril');
+  } else if (isTaken) {
+    el.classList.add('taken');
+  } else if (isSel) {
+    el.classList.add('selected');
   }
+
+  // Nomor kursi
+  var numEl = document.createElement('div');
+  numEl.className = 'seat-num';
+  numEl.textContent = num;
+  el.appendChild(numEl);
+
+  // Nama hanya muncul kalau kursi sudah benar-benar diambil
+  if (isTaken) {
+    var nameEl = document.createElement('div');
+    nameEl.className = 'seat-name';
+    nameEl.textContent = takenSeats[num].split(' ')[0];
+    el.appendChild(nameEl);
+  }
+
+  // Kursi yang tersedia / belum diambil bisa diklik
+  if (!isSteril && !isTaken) {
+    el.addEventListener('click', function() {
+      selectedSeat = num;
+      renderLayout();
+    });
+  }
+
+  return el;
+}
 
   function renderLayout() {
     var container = document.getElementById('bus-layout-container');
