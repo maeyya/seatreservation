@@ -374,6 +374,10 @@ select option{background:#10164f;color:#fff}
   var db = firebase.database();
   var seatsRef = db.ref('seats');
 
+  // Render kursi langsung saat halaman dibuka. Firebase hanya dipakai untuk sinkronisasi status kursi.
+  // Jadi kursi tetap muncul meskipun koneksi Firebase sedang lambat/gagal.
+  setTimeout(renderLayout, 0);
+
   // State
   var STERIL_SEATS = [];
   var userData = { name: '', dept: '' };
@@ -382,11 +386,10 @@ select option{background:#10164f;color:#fff}
   // Kursi yang pada layout poster sudah memiliki label/pemilik.
   // Hapus/ubah object ini jika semua kursi ingin dibuat kosong.
   var REFERENCE_SEAT_LABELS = {
-    1:'TKPK', 2:'DAVID', 3:'KONKES', 4:'DDM',
-    21:'DDM', 22:'KONKES', 23:'TKPK', 24:'INTI',
-    36:'SC', 37:'SC', 38:'SC', 39:'SC', 40:'SC',
-    41:'TKPK', 42:'TKPK', 43:'KONKES', 44:'DDM',
-    45:'AHUM', 46:'AHUM', 47:'AHUM', 48:'INTI', 49:'AHUM', 50:'AHUM'
+    1:'PANITIA', 2:'PANITIA', 3:'PANITIA', 4:'PANITIA',
+    21:'PANITIA', 22:'PANITIA', 23:'PANITIA', 24:'PANITIA',
+    41:'PANITIA', 42:'PANITIA', 43:'PANITIA', 44:'PANITIA',
+    45:'PANITIA', 46:'PANITIA', 47:'PANITIA', 48:'PANITIA', 49:'PANITIA', 50:'PANITIA'
   };
 
   
@@ -426,6 +429,10 @@ select option{background:#10164f;color:#fff}
       if (!isNaN(num)) takenSeats[num] = d.nama || '?';
     });
     renderLayout();
+  }, function(error) {
+    console.error('Firebase read error:', error);
+    // Jangan menghilangkan layout kursi jika Firebase tidak bisa dibaca.
+    renderLayout();
   });
 
   function makeSeat(num) {
@@ -441,11 +448,17 @@ select option{background:#10164f;color:#fff}
     numEl.className = 'seat-num';
     numEl.textContent = num;
     el.appendChild(numEl);
+    var label = REFERENCE_SEAT_LABELS[num] || '';
     if (isTaken) {
       var nameEl = document.createElement('div');
       nameEl.className = 'seat-name';
-      nameEl.textContent = takenSeats[num].split(' ')[0]; // cukup nama pertama
+      nameEl.textContent = takenSeats[num].split(' ')[0];
       el.appendChild(nameEl);
+    } else if (label) {
+      var labelEl = document.createElement('div');
+      labelEl.className = 'seat-name';
+      labelEl.textContent = label;
+      el.appendChild(labelEl);
     }
     if (!isSteril && !isTaken) {
       el.addEventListener('click', function() {
