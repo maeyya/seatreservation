@@ -233,7 +233,51 @@ select option{background:#10164f;color:#fff}
   border:1px solid rgba(98,214,255,.12);border-radius:50%;
   transform:translate(-50%,-50%) rotate(-12deg);pointer-events:none;
 }
+.seat-zoom-controls{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:12px;
+  margin:8px 0 12px;
+}
 
+.seat-zoom-controls button{
+  width:36px;
+  height:36px;
+  border:none;
+  border-radius:10px;
+  background:linear-gradient(135deg,#ff69d8,#7748ff);
+  color:white;
+  font-size:22px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.seat-zoom-controls button:hover{
+  transform:scale(1.08);
+}
+
+#seatZoomLabel{
+  min-width:55px;
+  text-align:center;
+  font-size:.75rem;
+  font-weight:800;
+  color:#dbe3ff;
+}
+
+#seat-layout-wrapper{
+  width:100%;
+  overflow:auto;
+  display:flex;
+  justify-content:center;
+  padding:8px 4px;
+}
+
+#bus-layout-container{
+  transform-origin:top center;
+  transition:transform .2s ease;
+}
+  
 </style>
 </head>
 <body>
@@ -302,7 +346,6 @@ select option{background:#10164f;color:#fff}
 </div>
 <div id="seat-layout-wrapper">
   <div id="bus-layout-container">
-      <div id="bus-layout-container">
     </div>
 </div>
       <div class="seat-legend">
