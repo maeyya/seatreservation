@@ -378,48 +378,33 @@ select option{background:#10164f;color:#fff}
   // Jadi kursi tetap muncul meskipun koneksi Firebase sedang lambat/gagal.
   setTimeout(renderLayout, 0);
 
-  // State
-  var STERIL_SEATS = [];
-  var userData = { name: '', dept: '' };
-  var selectedSeat = null;
-  var takenSeats = {};
-  // Kursi yang pada layout poster sudah memiliki label/pemilik.
-  // Hapus/ubah object ini jika semua kursi ingin dibuat kosong.
-  var REFERENCE_SEAT_LABELS = {
-    1:'PANITIA', 2:'PANITIA', 3:'PANITIA', 4:'PANITIA',
-    21:'PANITIA', 22:'PANITIA', 23:'PANITIA', 24:'PANITIA',
-    41:'PANITIA', 42:'PANITIA', 43:'PANITIA', 44:'PANITIA',
-    45:'PANITIA', 46:'PANITIA', 47:'PANITIA', 48:'PANITIA', 49:'PANITIA', 50:'PANITIA'
-  };
+// State
+var STERIL_SEATS = [];
+var userData = { name: '', dept: '' };
+var selectedSeat = null;
+var takenSeats = {};
 
   
   // Bus layout
-  var BUS_ROWS = [
-    { left:[1],   right:[2],   leftDoor:'PINTU DEPAN' },
-    { left:[3],   right:[4] },
-    { left:[5],   right:[6] },
-    { left:[7],   right:[8] },
-    { left:[9],   right:[10] },
-    { left:[11],  right:[12] },
-    { left:[13],  right:[14] },
-    { left:[15],  right:[16] },
-    { left:[17],  right:[18] },
-    { left:[19],  right:[20] },
-    { left:[21],  right:[22] },
-    { left:[23],  right:[24] },
-    { left:[25],  right:[26] },
-    { left:[27],  right:[28] },
-    { left:[29],  right:[30] },
-    { left:[31],  right:[32] },
-    { left:[33],  right:[34] },
-    { left:[35],  right:[36] },
-    { left:[37],  right:[38] },
-    { left:[39],  right:[40] },
-    { left:[41],  right:[42] },
-    { left:[43],  right:[44] },
-    { left:[45,46,47,48,49,50], right:[], fullRow:true, leftDoor:'PINTU BELAKANG' }
-  ];
-
+ var BUS_ROWS = [
+  { left:[1,2],     right:[3,4],     leftDoor:'PINTU DEPAN' },
+  { left:[5,6],     right:[7,8] },
+  { left:[9,10],    right:[11,12] },
+  { left:[13,14],   right:[15,16] },
+  { left:[17,18],   right:[19,20] },
+  { left:[21,22],   right:[23,24] },
+  { left:[25,26],   right:[27,28] },
+  { left:[29,30],   right:[31,32] },
+  { left:[33,34],   right:[35,36] },
+  { left:[37,38],   right:[39,40] },
+  { left:[41,42],   right:[43,44] },
+  {
+    left:[45,46,47,48,49,50],
+    right:[],
+    fullRow:true,
+    leftDoor:'PINTU BELAKANG'
+  }
+];
   // Firebase realtime listener - update semua device otomatis
   seatsRef.on('value', function(snapshot) {
     var data = snapshot.val() || {};
