@@ -470,11 +470,11 @@ seatsRef.on('value', function(snapshot) {
   });
 
   renderLayout();
+
+}, function(error) {
+  console.error('Firebase read error:', error);
+  renderLayout();
 });
-  }, function(error) {
-    console.error('Firebase read error:', error);
-    renderLayout();
-  });
 
 function makeSeat(num) {
   var isSteril = STERIL_SEATS.indexOf(num) !== -1;
