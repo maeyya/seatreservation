@@ -295,7 +295,16 @@ select option{background:#10164f;color:#fff}
         <div class="steering-wheel"></div>
         <span class="bus-front-label" style="opacity:.5">Sopir</span>
       </div>
-      <div id="bus-layout-container"></div>
+      <div class="seat-zoom-controls">
+  <button onclick="changeSeatZoom(-0.1)">−</button>
+  <span id="seatZoomLabel">100%</span>
+  <button onclick="changeSeatZoom(0.1)">+</button>
+</div>
+<div id="seat-layout-wrapper">
+  <div id="bus-layout-container">
+      <div id="bus-layout-container">
+    </div>
+</div>
       <div class="seat-legend">
         <div class="legend-item"><div class="legend-dot l-avail"></div>Tersedia</div>
         <div class="legend-item"><div class="legend-dot l-sel"></div>Pilihanmu</div>
